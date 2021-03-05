@@ -1,0 +1,31 @@
+/* 
+NumToDuoTrigesimal ( number )
+
+No dependencies
+
+( to convert Duotrigesimal strings back to numbers use custom function  DuoTrigesimalToNum ( DTGString ) )
+
+Created: December 26, 2010  St. Louis, MO  USA
+
+Tim Griffith Sr.
+
+Duotrigesimal, or base 32 numbers are like Hexadecimal numbers in that after 9, numbers are represented by letters. We know we can't use all the letters of the alphabet because the index of numbers would go beyond 31 up to 35. As best I have discovered the letters 'I' 'L' and 'O' are not used because in various forms they can be mistaken for other characters. My research has also shown that the letter 'U' has been omited because of 'accidental obscenities'.
+   Throughout books and the internet there are numerous algorithms showing how to convert numbers to hex and hex to numbers. I am not a genius, but rather a bit clever enough to augment those formulas to add the additional letters beyong hex F, and substitute dividing or multplying 16 into 32. All in all it was quite simple.
+   If credit is due- then it is due to those many people who have provided hex to num formulas. Thank you all- you know who you are! 
+*/
+
+// converts a number to a duotrigesimal (DTG) string
+
+Let ( [
+_BASE = Mod ( number ; 32 ) ;
+_ALPH = "0123456789ABCDEFGHJKMNPQRSTVWXYZ" ;
+_CHAR = Middle ( _ALPH ; _BASE + 1 ; 1 ) ;
+_NEXT = Div ( number ; 32 )
+] ;
+
+Case ( 
+_NEXT ;
+NumToDuoTrigesimal ( _NEXT )
+)//end Case
+& _CHAR
+)//end Let
