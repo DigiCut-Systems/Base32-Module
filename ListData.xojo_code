@@ -1,7 +1,7 @@
 #tag Class
 Protected Class ListData
 	#tag Property, Flags = &h0
-		Base32Int As Integer
+		Base32Int As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

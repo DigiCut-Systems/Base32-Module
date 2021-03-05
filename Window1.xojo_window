@@ -154,8 +154,8 @@ Begin Window Window1
       Left            =   362
       LockBottom      =   False
       LockedInPosition=   False
-      LockLeft        =   True
-      LockRight       =   False
+      LockLeft        =   False
+      LockRight       =   True
       LockTop         =   True
       MacButtonStyle  =   "0"
       Scope           =   0
@@ -183,7 +183,9 @@ End
 		  
 		  // DataIsEven
 		  
-		  DataScrambler
+		  DataStrScramble
+		  
+		  // DataStrDescramble
 		End Sub
 	#tag EndEvent
 
@@ -199,18 +201,11 @@ End
 		    'd.Desc in following line is d.Num converted to equivilant base32 string'
 		    d.Desc = Base32StringFromInteger(i)
 		    
-		    'RandomB32 Test for nDigits As Int for the width'
-		    'd.Desc = RandomB32(13)
-		    
-		    'Value"
-		    'ListBoxLazyLoad original value Random value'
-		    'd.Value = Rnd'
-		    
 		    'd.Desc in following line is d.Num converted to equivilant base32 value'
 		    d.Value = Base32StringToBase10String(d.Desc)
 		    
 		    'Setting of Reversal of Base32 value in Desc back to number for comparison'
-		    d.Base32Int = Base32StringToBase10Integer(d.Desc)
+		    d.Base32Int = Base32StringToBase10Integer(d.Desc).ToString
 		    
 		    Data.AddRow(d)
 		  Next
@@ -239,7 +234,7 @@ End
 		    d.Value = Base32StringToBase10String(d.Desc)
 		    
 		    'Setting of Reversal of Base32 value in Desc back to number for comparison'
-		    d.Base32Int = Base32StringToBase10Integer(d.Desc)
+		    d.Base32Int = Base32StringToBase10Integer(d.Desc).ToString
 		    
 		    Data.AddRow(d)
 		  Next
@@ -299,27 +294,72 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub DataScrambler()
+		Sub DataStrDescramble()
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
+		    
+		    'Column 1
 		    'i is a simple integer serial number value starting with 1
 		    d.Num = i
 		    
+		    'Column 2
 		    'Ordered Text Before Scramble - Randomize
 		    d.Desc = RandomB32(13)
 		    
+		    'Column 3
 		    'Scrambled Desc
-		    d.Value = Scrambler(d.Desc)
+		    d.Value = strScramble(d.Desc)
+		    
+		    'Column 4
+		    'Scrambled from Value
+		    d.Base32Int = StrDescramble(d.Value)
 		    
 		    Data.AddRow(d)
 		  Next
 		  
-		  Listbox1.ColumnCount = 3
-		  Listbox1.ColumnWidths = "15%,*,*"
+		  Listbox1.ColumnCount = 4
+		  Listbox1.ColumnWidths = "15%,*,*,*"
 		  Listbox1.HeaderAt(0) = "ID Integer"
 		  Listbox1.HeaderAt(1) = "Ordered Text"
 		  Listbox1.HeaderAt(2) = "Scrambled"
+		  Listbox1.HeaderAt(3) = "Descrambled"
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub DataStrScramble()
+		  For i As Integer = 1 To DataRows
+		    Var d As New ListData
+		    
+		    'Column 1
+		    'i is a simple integer serial number value starting with 1
+		    d.Num = i
+		    
+		    'Column 2
+		    'Ordered Text Before Scramble - Randomize
+		    If i = 1 Then
+		      d.Desc = "123456789ABCD"
+		    Else
+		      d.Desc = RandomB32(13)
+		    End If
+		    
+		    'Column 3
+		    'Scrambled Desc
+		    d.Value = strScramble(d.Desc)
+		    
+		    'Column 4
+		    'Length of scrambled Value
+		    d.Base32Int = d.Value.Length.ToString
+		    
+		    Data.AddRow(d)
+		  Next
 		  
+		  Listbox1.ColumnCount = 4
+		  Listbox1.ColumnWidths = "20%,*,*,*"
+		  Listbox1.HeaderAt(0) = "ID Integer"
+		  Listbox1.HeaderAt(1) = "Ordered Text"
+		  Listbox1.HeaderAt(2) = "Scrambled"
+		  Listbox1.HeaderAt(3) = "Scrambled Length"
 		End Sub
 	#tag EndMethod
 
@@ -341,7 +381,7 @@ End
 		  Listbox1.RemoveAllRows
 		  For i As Integer = Me.Value To Me.Value + 50
 		    If i <= Data.LastRowIndex Then
-		      Listbox1.AddRow(Data(i).Num.ToString, Data(i).Desc, Data(i).Value, Data(i).Base32Int.ToString)
+		      Listbox1.AddRow(Data(i).Num.ToString, Data(i).Desc, Data(i).Value, Data(i).Base32Int)
 		    End If
 		  Next
 		End Sub
@@ -355,7 +395,7 @@ End
 		  Listbox1.RemoveAllRows
 		  
 		  For i As Integer = 0 To Data.LastRowIndex
-		    Listbox1.AddRow(Data(i).Num.ToString, Data(i).Desc, Data(i).Value, Data(i).Base32Int.ToString)
+		    Listbox1.AddRow(Data(i).Num.ToString, Data(i).Desc, Data(i).Value, Data(i).Base32Int)
 		  Next
 		End Sub
 	#tag EndEvent
@@ -376,7 +416,7 @@ End
 		  ScrollBar1.Value = 0
 		  
 		  For i As Integer = 0 To 50
-		    Listbox1.AddRow(Data(i).Num.ToString, Data(i).Desc, Data(i).Value, Data(i).Base32Int.ToString)
+		    Listbox1.AddRow(Data(i).Num.ToString, Data(i).Desc, Data(i).Value, Data(i).Base32Int)
 		  Next
 		End Sub
 	#tag EndEvent
@@ -616,6 +656,14 @@ End
 		Group="Deprecated"
 		InitialValue="True"
 		Type="Boolean"
+		EditorType=""
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="DataRows"
+		Visible=false
+		Group="Behavior"
+		InitialValue="1000"
+		Type="Integer"
 		EditorType=""
 	#tag EndViewProperty
 #tag EndViewBehavior

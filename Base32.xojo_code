@@ -91,6 +91,10 @@ Protected Module Base32
 		  Var result As String
 		  Var rdm As Integer
 		  
+		  If nDigits < 1 Then
+		    nDigits = 1
+		  End If
+		  
 		  For i As Integer = 1 To nDigits
 		    rdm = System.Random.InRange(0, 31)
 		    result = result + Base32Chars.Middle(rdm,1)
@@ -102,17 +106,45 @@ Protected Module Base32
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function Scrambler(s As String) As String
-		  Var sFin As String = "" 'Final string
-		  Var sBuf1 As String = "" 'Buffer
-		  Var sBuf2 As String = "" 'Buffer2
+		Function strDescramble(s As String) As String
+		  Var sFin As String
+		  Var sBuf1 As String
+		  Var sBuf2 As String
 		  
-		  For i As Integer = 1 To s.Length
-		    If Not IsEven(i) Then
-		      sBuf1 = sBuf1 + s.Middle(i,1) 'Odd digit
-		    End If
+		  If IsEven(s.Length) Then 'Even number length
+		    sBuf1 = s.Left(s.Length / 2) 'left half of string
+		    sBuf2 = s.Right(s.Length / 2) ' right half of string
+		    For i As Integer = 0 To sBuf1.Length - 1
+		      'regroup char by char
+		      sFin = sFin + sBuf1.Middle(i, 1) + sBuf2.Middle(i, 1)
+		    Next
+		  Else 'Odd number length
+		    sBuf1 = s.Left(((s.Length + 1) / 2)) 'left half of string
+		    sBuf2 = s.Right(((s.Length - 1) / 2)) ' right half of string
+		    For i As Integer = 0 To sBuf2.Length - 1
+		      'regroup char by char
+		      sFin = sFin + sBuf1.Middle(i, 1) + sBuf2.Middle(i, 1)
+		    Next
+		    'add the last odd char
+		    sFin = sFin + sBuf1.Right(1)
+		  End If
+		  
+		  Return sFin
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function strScramble(s As String) As String
+		  Var sFin As String 'Final string
+		  Var sBuf1 As String 'Buffer
+		  Var sBuf2 As String 'Buffer2
+		  Var sLength As Integer = s.Length 'Length of s Parameter
+		  
+		  For i As Integer = 0 To s.Length - 1
 		    If IsEven(i) Then
-		      sBuf2 = sBuf2 + s.Middle(i,1) 'Even digit
+		      sBuf1 = sBuf1 + s.Middle(i,1)
+		    Else
+		      sBuf2 = sBuf2 + s.Middle(i,1)
 		    End If
 		  Next
 		  
