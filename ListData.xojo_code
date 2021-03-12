@@ -9,6 +9,10 @@ Protected Class ListData
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
+		isEqual As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		Num As Integer
 	#tag EndProperty
 
@@ -87,8 +91,8 @@ Protected Class ListData
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
-			Type="Integer"
-			EditorType=""
+			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class
