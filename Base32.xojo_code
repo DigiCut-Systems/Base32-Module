@@ -75,8 +75,43 @@ Protected Module Base32
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function isEqual(str1 As String, str2 As String) As Boolean
+		  // Compares 2 strings and returns True if they are equal
+		  // NOT Case Sensistive
+		  
+		  Var c As Integer
+		  
+		  c = str1.Compare(str2)
+		  
+		  If c = 0 Then
+		    Return True
+		  Else
+		    Return False
+		  End
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function isEqualCaseSensitive(str1 As String, str2 As String) As Boolean
+		  // Compares 2 strings and returns True if they are equal
+		  // Case Sensistive
+		  
+		  Var c As Integer
+		  
+		  c = str1.Compare(str2, ComparisonOptions.CaseSensitive)
+		  
+		  If c = 0 Then
+		    Return True
+		  Else
+		    Return False
+		  End
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function isEven(num As Integer) As Boolean
-		  'Returns True when 'n' is even and False when Odd'
+		  // Returns True when 'n' is even and False when Odd
+		  
 		  Var m As Integer = Num Mod 2
 		  If m = 0 Then
 		    Return True
@@ -88,6 +123,10 @@ Protected Module Base32
 
 	#tag Method, Flags = &h0
 		Function RandomB32(nDigits As Integer) As String
+		  // Produces random Base32 strings
+		  // Method parameter nDigits integer specifies desired length of string.
+		  // 0 still returns 1 digit
+		  
 		  Var result As String
 		  Var rdm As Integer
 		  
@@ -102,6 +141,41 @@ Protected Module Base32
 		  
 		  Return result
 		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function strCheckDigit(s As String) As String
+		  Var lgth As Integer
+		  Var result As String
+		  Var resultCode As Integer
+		  Var sum As Integer
+		  Var v As String
+		  
+		  // Empty String has no result
+		  If s = "" Then
+		    Return s
+		  End If
+		  
+		  // set 0 indexed length for Loop
+		  If s.Length <= 1 Then
+		    lgth = 1
+		  Else
+		    lgth = s.Length
+		  End If
+		  
+		  sum = 33
+		  For i As Integer = 0 To lgth
+		    v = s.Middle(i, 1)
+		    
+		    // weight of digit is equal to i+1
+		    sum = sum + ( Base32StringToBase10Integer(v) * (i+1) )
+		  Next
+		  
+		  resultCode = sum Mod 32
+		  result = Base32StringFromInteger(resultCode)
+		  
+		  Return result
 		End Function
 	#tag EndMethod
 

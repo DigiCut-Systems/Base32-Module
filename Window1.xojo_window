@@ -20,7 +20,7 @@ Begin Window Window1
    MinimumHeight   =   64
    MinimumWidth    =   64
    Resizeable      =   True
-   Title           =   "ListBox Lazy Loading"
+   Title           =   "Base32 ListBox Lazy Loading"
    Type            =   "0"
    Visible         =   True
    Width           =   600
@@ -177,21 +177,21 @@ End
 		Sub Open()
 		  // DataOriginalLazyLoad
 		  
-		  // DataBase32FromID
+		  // Base32FromID
 		  
-		  // DataBase32Random13
+		  // Base32Random13
 		  
-		  // DataIsEven
+		  // IsEven
 		  
-		  // DataStrScramble
+		  // StrScramble
 		  
-		  DataStrDescramble
+		  StrDescramble
 		End Sub
 	#tag EndEvent
 
 
 	#tag Method, Flags = &h0
-		Sub DataBase32FromID()
+		Sub Base32FromID()
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
 		    
@@ -220,7 +220,7 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub DataBase32Random13()
+		Sub Base32Random13()
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
 		    
@@ -249,27 +249,6 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub DataIsEven()
-		  For i As Integer = 1 To DataRows
-		    Var d As New ListData
-		    'i is a simple integer serial number value starting with 1
-		    d.Num = i
-		    
-		    'ListBoxLazyLoad original value Random value'
-		    d.Desc = isEven(i).ToString
-		    
-		    Data.AddRow(d)
-		  Next
-		  
-		  Listbox1.ColumnCount = 2
-		  Listbox1.ColumnWidths = "10%,*"
-		  Listbox1.HeaderAt(0) = "ID Integer"
-		  Listbox1.HeaderAt(1) = "IsEven"
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub DataOriginalLazyLoad()
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
@@ -294,7 +273,28 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub DataStrDescramble()
+		Sub isEvenList()
+		  For i As Integer = 1 To DataRows
+		    Var d As New ListData
+		    'i is a simple integer serial number value starting with 1
+		    d.Num = i
+		    
+		    'ListBoxLazyLoad original value Random value'
+		    d.Desc = isEven(i).ToString
+		    
+		    Data.AddRow(d)
+		  Next
+		  
+		  Listbox1.ColumnCount = 2
+		  Listbox1.ColumnWidths = "10%,*"
+		  Listbox1.HeaderAt(0) = "ID Integer"
+		  Listbox1.HeaderAt(1) = "IsEven"
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub StrDescramble()
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
 		    
@@ -320,7 +320,8 @@ End
 		    
 		    'Column 5
 		    'Does Column 2 equal Colum 4
-		    d.isEqual = d.Desc.Compare(d.Base32Int, ComparisonOptions.CaseSensitive).ToString
+		    'd.isEqual = d.Desc.Compare(d.Base32Int, ComparisonOptions.CaseSensitive).ToString
+		    d.isEqual = isEqualCaseSensitive(d.Desc, d.Base32Int).ToString
 		    
 		    Data.AddRow(d)
 		  Next
@@ -336,7 +337,7 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub DataStrScramble()
+		Sub StrScramble()
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
 		    
@@ -390,7 +391,7 @@ End
 		  Listbox1.RemoveAllRows
 		  For i As Integer = Me.Value To Me.Value + 50
 		    If i <= Data.LastRowIndex Then
-		      Listbox1.AddRow(Data(i).Num.ToString, Data(i).Desc, Data(i).Value, Data(i).Base32Int)
+		      Listbox1.AddRow(Data(i).Num.ToString, Data(i).Desc, Data(i).Value, Data(i).Base32Int, Data(i).isEqual)
 		    End If
 		  Next
 		End Sub
