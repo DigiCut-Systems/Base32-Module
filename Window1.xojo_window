@@ -29,7 +29,7 @@ Begin Window Window1
       AllowAutoHideScrollbars=   True
       AllowExpandableRows=   False
       AllowFocusRing  =   True
-      AllowResizableColumns=   False
+      AllowResizableColumns=   True
       AllowRowDragging=   False
       AllowRowReordering=   False
       Bold            =   False
@@ -179,38 +179,40 @@ End
 		  
 		  // Base32FromID
 		  
-		  // Base32Random13
+		  // Base32Random4
 		  
-		  // IsEven
+		  // IsEvenList
 		  
 		  // StrScramble
 		  
-		  StrDescramble
+		  // StrDescramble
+		  
+		  CheckSumTest
 		End Sub
 	#tag EndEvent
 
 
-	#tag Method, Flags = &h0
-		Sub Base32FromID()
+	#tag Method, Flags = &h21
+		Private Sub Base32FromID()
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
 		    
 		    'i is a simple integer serial number value starting with 1'
-		    d.Num = i
+		    d.c1 = i
 		    
-		    'd.Desc in following line is d.Num converted to equivilant base32 string'
-		    d.Desc = Base32StringFromInteger(i)
+		    'd.c2 in following line is d.c1 converted to equivilant base32 string'
+		    d.c2 = Base32StringFromInteger(i)
 		    
-		    'd.Desc in following line is d.Num converted to equivilant base32 value'
-		    d.Value = Base32StringToBase10String(d.Desc)
+		    'd.c2 in following line is d.c1 converted to equivilant base32 value'
+		    d.c3 = Base32StringToBase10String(d.c2)
 		    
 		    'Setting of Reversal of Base32 value in Desc back to number for comparison'
-		    d.Base32Int = Base32StringToBase10Integer(d.Desc).ToString
+		    d.c4 = Base32StringToBase10Integer(d.c2).ToString
 		    
 		    Data.AddRow(d)
 		  Next
 		  
-		  Listbox1.ColumnCount = 2
+		  Listbox1.ColumnCount = 4
 		  Listbox1.ColumnWidths = "10%,*,*,*"
 		  Listbox1.HeaderAt(0) = "ID Integer"
 		  Listbox1.HeaderAt(1) = "Base32StringFromInteger"
@@ -219,22 +221,24 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub Base32Random13()
+	#tag Method, Flags = &h21
+		Private Sub Base32Random4()
+		  Var f As String = "###,###,###,###"
+		  
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
 		    
 		    'i is a simple integer serial number value starting with 1'
-		    d.Num = i
+		    d.c1 = i
 		    
 		    'RandomB32 Test for nDigits As Int for the width'
-		    d.Desc = RandomB32(13)
+		    d.c2 = RandomB32(4)
 		    
-		    'd.Desc in following line is d.Num converted to equivilant base32 value'
-		    d.Value = Base32StringToBase10String(d.Desc)
+		    'd.c2 in following line is d.c1 converted to equivilant base32 value'
+		    d.c3 = Base32StringToBase10String(d.c2)
 		    
 		    'Setting of Reversal of Base32 value in Desc back to number for comparison'
-		    d.Base32Int = Base32StringToBase10Integer(d.Desc).ToString
+		    d.c4 = Format(Base32StringToBase10Integer(d.c2), f)
 		    
 		    Data.AddRow(d)
 		  Next
@@ -248,18 +252,60 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub DataOriginalLazyLoad()
+	#tag Method, Flags = &h21
+		Private Sub CheckSumTest()
+		  For i As Integer = 1 To DataRows
+		    Var d As New ListData
+		    
+		    'Column 1
+		    'i is a simple integer serial number value starting with 1
+		    d.c1 = i
+		    
+		    'Column 2
+		    ' Randomized base 32 string
+		    If i = 1 Then
+		      d.c2 = "123456789ABCD"
+		    Else
+		      d.c2 = RandomB32(13)
+		    End If
+		    
+		    'Column 3
+		    'Check sum of Column 2
+		    d.c3 = Base32CheckDigit(d.c2)
+		    
+		    'Column 4
+		    'Scrambled Column 2
+		    d.c4 = StrScramble(d.c2)
+		    
+		    'Column 5
+		    'Check sum of Column 4
+		    d.c5 = Base32CheckDigit(d.c4)
+		    
+		    Data.AddRow(d)
+		  Next
+		  
+		  Listbox1.ColumnCount = 5
+		  Listbox1.ColumnWidths = "15%,*,*,*,*"
+		  Listbox1.HeaderAt(0) = "ID Integer"
+		  Listbox1.HeaderAt(1) = "Ordered Text"
+		  Listbox1.HeaderAt(2) = "Ordered CheckSum"
+		  Listbox1.HeaderAt(3) = "Scrambled"
+		  Listbox1.HeaderAt(4) = "Scrambled CheckSum"
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub DataOriginalLazyLoad()
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
 		    'i is a simple integer serial number value starting with 1
-		    d.Num = i
+		    d.c1 = i
 		    
 		    'ListBoxLazyLoad original value Random value'
-		    d.Value = Rnd.ToString
+		    d.c3 = Rnd.ToString
 		    
 		    'ListBoxLazyLoad original value Description value'
-		    d.Desc = "Testing"
+		    d.c2 = "Testing"
 		    
 		    Data.AddRow(d)
 		  Next
@@ -272,15 +318,15 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub isEvenList()
+	#tag Method, Flags = &h21
+		Private Sub isEvenList()
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
 		    'i is a simple integer serial number value starting with 1
-		    d.Num = i
+		    d.c1 = i
 		    
 		    'ListBoxLazyLoad original value Random value'
-		    d.Desc = isEven(i).ToString
+		    d.c2 = isEven(i).ToString
 		    
 		    Data.AddRow(d)
 		  Next
@@ -293,35 +339,35 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub StrDescramble()
+	#tag Method, Flags = &h21
+		Private Sub StrDescramble()
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
 		    
 		    'Column 1
 		    'i is a simple integer serial number value starting with 1
-		    d.Num = i
+		    d.c1 = i
 		    
 		    'Column 2
 		    'Ordered Text Before Scramble - Randomize
 		    If i = 1 Then
-		      d.Desc = "123456789ABCD"
+		      d.c2 = "123456789ABCD"
 		    Else
-		      d.Desc = RandomB32(13)
+		      d.c2 = RandomB32(13)
 		    End If
 		    
 		    'Column 3
 		    'Scrambled Desc
-		    d.Value = strScramble(d.Desc)
+		    d.c3 = strScramble(d.c2)
 		    
 		    'Column 4
 		    'Scrambled from Value
-		    d.Base32Int = StrDescramble(d.Value)
+		    d.c4 = StrDescramble(d.c3)
 		    
 		    'Column 5
 		    'Does Column 2 equal Colum 4
-		    'd.isEqual = d.Desc.Compare(d.Base32Int, ComparisonOptions.CaseSensitive).ToString
-		    d.isEqual = isEqualCaseSensitive(d.Desc, d.Base32Int).ToString
+		    'd.c5 = d.c2.Compare(d.c4, ComparisonOptions.CaseSensitive).ToString
+		    d.c5 = isEqualCaseSensitive(d.c2, d.c4).ToString
 		    
 		    Data.AddRow(d)
 		  Next
@@ -336,30 +382,30 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub StrScramble()
+	#tag Method, Flags = &h21
+		Private Sub StrScramble()
 		  For i As Integer = 1 To DataRows
 		    Var d As New ListData
 		    
 		    'Column 1
 		    'i is a simple integer serial number value starting with 1
-		    d.Num = i
+		    d.c1 = i
 		    
 		    'Column 2
 		    'Ordered Text Before Scramble - Randomize
 		    If i = 1 Then
-		      d.Desc = "123456789ABCD"
+		      d.c2 = "123456789ABCD"
 		    Else
-		      d.Desc = RandomB32(13)
+		      d.c2 = RandomB32(13)
 		    End If
 		    
 		    'Column 3
 		    'Scrambled Desc
-		    d.Value = strScramble(d.Desc)
+		    d.c3 = strScramble(d.c2)
 		    
 		    'Column 4
 		    'Length of scrambled Value
-		    d.Base32Int = d.Value.Length.ToString
+		    d.c4 = d.c3.Length.ToString
 		    
 		    Data.AddRow(d)
 		  Next
@@ -391,7 +437,7 @@ End
 		  Listbox1.RemoveAllRows
 		  For i As Integer = Me.Value To Me.Value + 50
 		    If i <= Data.LastRowIndex Then
-		      Listbox1.AddRow(Data(i).Num.ToString, Data(i).Desc, Data(i).Value, Data(i).Base32Int, Data(i).isEqual)
+		      Listbox1.AddRow(Data(i).c1.ToString, Data(i).c2, Data(i).c3, Data(i).c4, Data(i).c5)
 		    End If
 		  Next
 		End Sub
@@ -405,7 +451,7 @@ End
 		  Listbox1.RemoveAllRows
 		  
 		  For i As Integer = 0 To Data.LastRowIndex
-		    Listbox1.AddRow(Data(i).Num.ToString, Data(i).Desc, Data(i).Value, Data(i).Base32Int, Data(i).isEqual)
+		    Listbox1.AddRow(Data(i).c1.ToString, Data(i).c2, Data(i).c3, Data(i).c4, Data(i).c5, Data(i).c6)
 		  Next
 		End Sub
 	#tag EndEvent
@@ -426,7 +472,7 @@ End
 		  ScrollBar1.Value = 0
 		  
 		  For i As Integer = 0 To 50
-		    Listbox1.AddRow(Data(i).Num.ToString, Data(i).Desc, Data(i).Value, Data(i).Base32Int, Data(i).isEqual)
+		    Listbox1.AddRow(Data(i).c1.ToString, Data(i).c2, Data(i).c3, Data(i).c4, Data(i).c5, Data(i).c6)
 		  Next
 		End Sub
 	#tag EndEvent

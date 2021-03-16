@@ -1,6 +1,42 @@
 #tag Module
 Protected Module Base32
 	#tag Method, Flags = &h0
+		Function Base32CheckDigit(s As String) As String
+		  // Perform a base 32 checksum and return a base 32 single check digit string
+		  Var lgth As Integer
+		  Var result As String
+		  Var resultCode As Integer
+		  Var sum As Integer
+		  Var v As String
+		  
+		  // Empty String has no result
+		  If s = "" Then
+		    Return s
+		  End If
+		  
+		  // set 0 indexed length for Loop
+		  If s.Length <= 1 Then
+		    lgth = 1
+		  Else
+		    lgth = s.Length
+		  End If
+		  
+		  sum = 33
+		  For i As Integer = 0 To lgth
+		    v = s.Middle(i, 1)
+		    
+		    // weight of digit is equal to i+1
+		    sum = sum + ( Base32StringToBase10Integer(v) * (i+1) )
+		  Next
+		  
+		  resultCode = sum Mod 32
+		  result = Base32StringFromInteger(resultCode)
+		  
+		  Return result
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Base32StringFromInteger(Base10Num As Integer) As String
 		  Var base As Integer
 		  Var char As String
@@ -141,41 +177,6 @@ Protected Module Base32
 		  
 		  Return result
 		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function strCheckDigit(s As String) As String
-		  Var lgth As Integer
-		  Var result As String
-		  Var resultCode As Integer
-		  Var sum As Integer
-		  Var v As String
-		  
-		  // Empty String has no result
-		  If s = "" Then
-		    Return s
-		  End If
-		  
-		  // set 0 indexed length for Loop
-		  If s.Length <= 1 Then
-		    lgth = 1
-		  Else
-		    lgth = s.Length
-		  End If
-		  
-		  sum = 33
-		  For i As Integer = 0 To lgth
-		    v = s.Middle(i, 1)
-		    
-		    // weight of digit is equal to i+1
-		    sum = sum + ( Base32StringToBase10Integer(v) * (i+1) )
-		  Next
-		  
-		  resultCode = sum Mod 32
-		  result = Base32StringFromInteger(resultCode)
-		  
-		  Return result
 		End Function
 	#tag EndMethod
 

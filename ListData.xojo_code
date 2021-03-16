@@ -1,23 +1,27 @@
 #tag Class
 Protected Class ListData
 	#tag Property, Flags = &h0
-		Base32Int As String
+		c1 As Integer
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Desc As String
+		c2 As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		isEqual As String
+		c3 As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Num As Integer
+		c4 As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		Value As String
+		c5 As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		c6 As String
 	#tag EndProperty
 
 
@@ -63,7 +67,7 @@ Protected Class ListData
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Num"
+			Name="c1"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
@@ -71,7 +75,7 @@ Protected Class ListData
 			EditorType=""
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Value"
+			Name="c3"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
@@ -79,7 +83,7 @@ Protected Class ListData
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Desc"
+			Name="c2"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
@@ -87,12 +91,20 @@ Protected Class ListData
 			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="Base32Int"
+			Name="c4"
 			Visible=false
 			Group="Behavior"
 			InitialValue=""
 			Type="String"
 			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="c5"
+			Visible=false
+			Group="Behavior"
+			InitialValue=""
+			Type="String"
+			EditorType=""
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class
