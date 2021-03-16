@@ -37,6 +37,52 @@ Protected Module Base32
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Base32CheckDigitAppend(s As String) As String
+		  // Perform a base 32 checksum and return string with the appended check digit
+		  Var result As String
+		  Var checkDigit As String
+		  
+		  // Empty String has no result
+		  If s = "" Then
+		    Return s
+		  End If
+		  
+		  checkDigit = Base32CheckDigit(s)
+		  result = s + checkDigit
+		  
+		  Return result
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Base32CheckDigitIsValid(s As String) As Boolean
+		  // Return true when the check digit is valid for the string with an appeneded check digit
+		  
+		  Var checkDigit As String
+		  Var checkDigitIsEqual As Boolean
+		  Var checkString As String
+		  Var digitToCheck As String
+		  
+		  // Empty String is NOT valid: False
+		  If s = "" Then
+		    Return False
+		  End If
+		  
+		  // String length is less than or equal to 2, and can NOT be evaluated. False
+		  If s.Length < 2 Then
+		    Return False
+		  End If
+		  
+		  digitToCheck = s.Right(1)
+		  checkString = s.Left(s.Length - 1)
+		  checkDigit = Base32CheckDigit(checkString)
+		  checkDigitIsEqual = isEqualCaseSensitive(digitToCheck, checkDigit)
+		  
+		  Return checkDigitIsEqual
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Base32StringFromInteger(Base10Num As Integer) As String
 		  Var base As Integer
 		  Var char As String

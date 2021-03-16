@@ -187,7 +187,9 @@ End
 		  
 		  // StrDescramble
 		  
-		  CheckSumTest
+		  // CheckSumTest
+		  
+		  CheckSumTest2
 		End Sub
 	#tag EndEvent
 
@@ -291,6 +293,53 @@ End
 		  Listbox1.HeaderAt(2) = "Ordered CheckSum"
 		  Listbox1.HeaderAt(3) = "Scrambled"
 		  Listbox1.HeaderAt(4) = "Scrambled CheckSum"
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub CheckSumTest2()
+		  For i As Integer = 1 To DataRows
+		    Var d As New ListData
+		    
+		    'Column 1
+		    'i is a simple integer serial number value starting with 1
+		    d.c1 = i
+		    
+		    'Column 2
+		    ' Randomized base 32 string
+		    If i = 1 Then
+		      d.c2 = "123456789ABCD"
+		    Else
+		      d.c2 = RandomB32(13)
+		    End If
+		    
+		    'Column 3
+		    'Check sum Appended to Column 2
+		    d.c3 = Base32CheckDigitAppend(d.c2)
+		    
+		    'Column 4
+		    'Valid Check sum test for Column 3
+		    d.c4 = Base32CheckDigitIsValid(d.c3).ToString
+		    
+		    'Column 5
+		    'Replace first digit of Column 3
+		    d.c5 = RandomB32(1) + d.c3.Right(d.c3.Length - 1)
+		    
+		    'Column 6
+		    'Valid Check sum test for Column 5
+		    d.c6 = Base32CheckDigitIsValid(d.c5).ToString
+		    
+		    Data.AddRow(d)
+		  Next
+		  
+		  Listbox1.ColumnCount = 6
+		  Listbox1.ColumnWidths = "15%,*,*,*,*,*"
+		  Listbox1.HeaderAt(0) = "ID"
+		  Listbox1.HeaderAt(1) = "Text"
+		  Listbox1.HeaderAt(2) = "with Checksum"
+		  Listbox1.HeaderAt(3) = "Checksum Valid"
+		  Listbox1.HeaderAt(4) = "Modified Text"
+		  Listbox1.HeaderAt(5) = "Checksum Valid"
 		End Sub
 	#tag EndMethod
 
