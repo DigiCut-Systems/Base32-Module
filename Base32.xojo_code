@@ -158,7 +158,7 @@ Protected Module Base32
 
 	#tag Method, Flags = &h0
 		Function isEqual(str1 As String, str2 As String) As Boolean
-		  // Compares 2 strings and returns True if they are equal
+		  // Compares 2 strings and returns True if they are the same
 		  // NOT Case Sensistive
 		  
 		  Var c As Integer
